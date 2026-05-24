@@ -76,6 +76,40 @@ export default async function handler(req, res) {
     }
   }
 
-  res.setHeader('Allow', ['GET', 'POST', 'OPTIONS']);
+  // ── DELETE ────────────────────────────────────────────────────────────────
+  if (req.method === 'DELETE') {
+    const authHeader = req.headers.authorization;
+    if (authHeader !== 'Bearer admin123') {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const { id } = req.query;
+    if (!id) {
+      return res.status(400).json({ error: 'Missing blog id' });
+    }
+
+    try {
+      await connectToDatabase();
+      const deletedBlog = await Blog.findOneAndDelete({ id });
+      
+      if (!deletedBlog) {
+        return res.status(404).json({ error: 'Blog not found' });
+      }
+
+      // Bust the cache so the next GET returns fresh data
+      _cache = null;
+      _cacheTime = 0;
+
+      return res.status(200).json({ message: 'Blog deleted successfully' });
+    } catch (error) {
+      console.error('[/api/blogs DELETE]', error);
+      return res.status(500).json({
+        error: 'Failed to delete blog',
+        details: error.message,
+      });
+    }
+  }
+
+  res.setHeader('Allow', ['GET', 'POST', 'DELETE', 'OPTIONS']);
   return res.status(405).end(`Method ${req.method} Not Allowed`);
 }

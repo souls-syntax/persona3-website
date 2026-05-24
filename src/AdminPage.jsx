@@ -16,6 +16,18 @@ export default function AdminPage() {
   const [chapterIndex, setChapterIndex] = useState('');
   
   const [status, setStatus] = useState('');
+  const [blogs, setBlogs] = useState([]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetch('/api/blogs')
+        .then(res => res.json())
+        .then(data => {
+          if (data.blogs) setBlogs(data.blogs);
+        })
+        .catch(err => console.error(err));
+    }
+  }, [isAuthenticated]);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -68,6 +80,26 @@ export default function AdminPage() {
     }
   };
 
+  const handleDelete = async (id) => {
+    if (!window.confirm(`Are you sure you want to delete blog "${id}"?`)) return;
+    setStatus(`Deleting ${id}...`);
+    try {
+      const res = await fetch(`/api/blogs?id=${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer admin123' }
+      });
+      if (res.ok) {
+        setStatus(`Deleted ${id} successfully!`);
+        setBlogs(blogs.filter(b => b.id !== id));
+      } else {
+        const err = await res.json();
+        setStatus(`Error: ${err.error}`);
+      }
+    } catch (err) {
+      setStatus(`Network error: ${err.message}`);
+    }
+  };
+
   return (
     <div id="menu-screen">
       <video src={bgVideo} autoPlay loop muted playsInline />
@@ -78,23 +110,23 @@ export default function AdminPage() {
         fontFamily: 'Inter, sans-serif'
       }}>
         {!isAuthenticated ? (
-          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 10, background: '#111', padding: 30, border: '1px solid #c4001a' }}>
-            <h2 style={{ fontFamily: 'Anton, sans-serif', color: '#c4001a', fontSize: 32, margin: 0 }}>ADMIN ACCESS</h2>
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 10, background: '#111', padding: 40, border: '1px solid #a855f7', borderRadius: 8, boxShadow: '0 0 30px rgba(168,85,247,0.2)' }}>
+            <h2 style={{ fontFamily: 'Inter, sans-serif', fontWeight: 800, color: '#39ff14', fontSize: 24, margin: '0 0 10px 0', letterSpacing: 4 }}>SYSTEM ACCESS</h2>
             <input 
               type="password" 
-              placeholder="Password" 
+              placeholder="Enter Access Code..." 
               value={password} 
               onChange={e => setPassword(e.target.value)} 
-              style={{ padding: 10, background: '#222', color: 'white', border: '1px solid #444' }}
+              style={{ padding: 12, background: 'rgba(34,211,238,0.1)', color: 'white', border: '1px solid #a855f7', fontFamily: 'JetBrains Mono, monospace', outline: 'none' }}
             />
-            <button type="submit" style={{ padding: 10, background: '#c4001a', color: 'white', border: 'none', cursor: 'pointer', fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 2, fontSize: 18 }}>LOGIN</button>
-            {status && <p style={{ color: '#ff4444', margin: 0 }}>{status}</p>}
+            <button type="submit" style={{ padding: 12, background: 'linear-gradient(90deg, #39ff14, #a855f7)', color: 'black', border: 'none', cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontWeight: 800, letterSpacing: 2, fontSize: 16 }}>AUTHENTICATE</button>
+            {status && <p style={{ color: '#ff3366', margin: 0, fontFamily: 'JetBrains Mono, monospace', fontSize: 14 }}>{status}</p>}
           </form>
         ) : (
-          <div style={{ width: '100%', maxWidth: 800, background: '#111', padding: 30, border: '1px solid #c4001a', overflowY: 'auto', maxHeight: '90vh' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-              <h2 style={{ fontFamily: 'Anton, sans-serif', color: '#c4001a', fontSize: 32, margin: 0 }}>NEW POST</h2>
-              <button onClick={() => navigate('/blog')} style={{ background: 'none', border: '1px solid #c4001a', color: '#c4001a', padding: '5px 10px', cursor: 'pointer' }}>BACK TO BLOG</button>
+          <div style={{ width: '100%', maxWidth: 800, background: 'rgba(10,5,20,0.9)', padding: 40, border: '1px solid #a855f7', overflowY: 'auto', maxHeight: '90vh', boxShadow: '0 0 40px rgba(168,85,247,0.3)', borderRadius: 8 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 30 }}>
+              <h2 style={{ fontFamily: 'Inter, sans-serif', fontWeight: 800, color: '#39ff14', fontSize: 28, margin: 0, letterSpacing: 4 }}>ADMIN CONSOLE</h2>
+              <button onClick={() => navigate('/blog')} style={{ background: 'none', border: '1px solid #39ff14', color: '#39ff14', padding: '8px 16px', cursor: 'pointer', fontFamily: 'JetBrains Mono, monospace' }}>BACK TO BLOG</button>
             </div>
             
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
@@ -106,9 +138,24 @@ export default function AdminPage() {
                 <input type="number" placeholder="Chapter Index" value={chapterIndex} onChange={e => setChapterIndex(e.target.value)} style={{ padding: 10, background: '#222', color: 'white', border: '1px solid #444', width: 150 }} />
               </div>
               <textarea placeholder="Markdown Content" value={content} onChange={e => setContent(e.target.value)} required style={{ padding: 10, background: '#222', color: 'white', border: '1px solid #444', minHeight: 300, fontFamily: 'monospace' }} />
-              <button type="submit" style={{ padding: 15, background: '#c4001a', color: 'white', border: 'none', cursor: 'pointer', fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 2, fontSize: 20 }}>PUBLISH</button>
+              <button type="submit" style={{ padding: 15, background: '#a855f7', color: 'white', border: 'none', cursor: 'pointer', fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 2, fontSize: 20 }}>PUBLISH</button>
               {status && <p style={{ color: status.includes('Error') ? '#ff4444' : '#44ff44', textAlign: 'center' }}>{status}</p>}
             </form>
+
+            <hr style={{ borderColor: '#444', margin: '40px 0 30px' }} />
+            <h3 style={{ fontFamily: 'Anton, sans-serif', color: '#a855f7', fontSize: 28, margin: '0 0 20px 0', letterSpacing: 2 }}>MANAGE POSTS</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {blogs.map(blog => (
+                <div key={blog.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#1a0d2e', padding: 15, border: '1px solid #a855f7' }}>
+                  <div>
+                    <strong style={{ color: 'white', display: 'block', fontSize: 18, fontFamily: 'Inter, sans-serif' }}>{blog.title}</strong>
+                    <small style={{ color: '#a855f7', fontFamily: 'JetBrains Mono, monospace' }}>{blog.id} • {blog.date}</small>
+                  </div>
+                  <button onClick={() => handleDelete(blog.id)} style={{ background: 'transparent', color: '#ff3366', border: '1px solid #ff3366', padding: '8px 16px', cursor: 'pointer', fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1, transition: 'all 0.2s' }} onMouseOver={e => {e.target.style.background = '#ff3366'; e.target.style.color = 'white'}} onMouseOut={e => {e.target.style.background = 'transparent'; e.target.style.color = '#ff3366'}}>DELETE</button>
+                </div>
+              ))}
+              {blogs.length === 0 && <p style={{ color: '#888', fontStyle: 'italic' }}>No blogs found.</p>}
+            </div>
           </div>
         )}
       </div>

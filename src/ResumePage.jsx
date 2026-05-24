@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import char1 from "./assets/char1.png";
-import char2 from "./assets/char2.png";
-import char3 from "./assets/char3.png";
+import char1 from "./assets/Silverwolf_Render1_Hoyo-transparents.png";
+import char2 from "./assets/Silverwolf_Render2_Hoyo-transparents.png";
+import char3 from "./assets/Silverwolf_Render3_Hoyo-transparents.png";
 import icon1 from "./assets/icon1.png";
 import icon2 from "./assets/icon2.png";
 import icon3 from "./assets/icon3.png";
@@ -13,6 +13,13 @@ const ITEMS = [
   { id: "proj",  title: "PROJECTS",   subtitle: "OSes · Shells",         icon: icon3, img: char3 },
   { id: "lang",  title: "LANGUAGES",  subtitle: "C · CUDA · Zig",        icon: icon1, img: char1 },
 ];
+
+const CHAR_CROPS = {
+  edu: { objectPosition: "center top", transform: "scale(1.2)" },
+  skill: { objectPosition: "center 15%", transform: "scale(1.1)" },
+  proj: { objectPosition: "center top", transform: "scale(1.3)" },
+  lang: { objectPosition: "center 10%", transform: "scale(1.2)" },
+};
 
 const DETAIL_DATA = {
   0: {
@@ -330,7 +337,7 @@ export default function ResumePage({ src, mode }) {
           <div className="hsr-card-subtitle">Path: Nihility // {currentItem.subtitle}</div>
           
           <div className="hsr-main-card">
-            <img src={currentItem.img} alt={currentItem.title} className="hsr-card-image" />
+            <img src={currentItem.img} alt={currentItem.title} className="hsr-card-image" style={CHAR_CROPS[currentItem.id]} />
           </div>
 
           <div className="hsr-icon-row">

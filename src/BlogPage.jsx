@@ -139,39 +139,43 @@ export default function BlogPage({ src }) {
         .blog-header {
           position: relative;
           flex-shrink: 0;
-          height: 90px;
-          background: #a855f7;
-          clip-path: polygon(0 0, 100% 0, 97% 100%, 0 100%);
+          height: 95px;
+          background: linear-gradient(135deg, rgba(12, 6, 20, 0.85) 0%, rgba(26, 11, 46, 0.85) 100%);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
           display: flex;
           align-items: center;
           padding: 0 40px;
           gap: 24px;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+          box-shadow: 0 10px 40px rgba(0,0,0,0.6);
           z-index: 2;
         }
         .blog-header::after {
           content: "";
           position: absolute;
-          top: 0; left: 0; width: 100%; height: 4px;
-          background: #22d3ee;
+          bottom: 0; left: 0; width: 100%; height: 3px;
+          background: linear-gradient(90deg, #39ff14 0%, #a855f7 50%, #22d3ee 100%);
+          box-shadow: 0 -2px 20px rgba(168, 85, 247, 0.5);
         }
         .blog-header-title {
           font-family: 'Inter', sans-serif;
           font-weight: 800;
-          font-size: 52px;
-          letter-spacing: 4px;
-          color: #facc15;
-          line-height: 1;
+          font-size: 46px;
+          letter-spacing: 6px;
+          background: linear-gradient(90deg, #39ff14 0%, #e0b0ff 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          line-height: 1.1;
           user-select: none;
           white-space: nowrap;
-          text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+          filter: drop-shadow(0 2px 8px rgba(57, 255, 20, 0.2));
         }
         .blog-header-sub {
           font-family: 'Inter', sans-serif;
           font-weight: 600;
           font-size: 14px;
           letter-spacing: 3px;
-          color: rgba(255,255,255,0.85);
+          color: rgba(220, 200, 255, 0.85);
           padding-top: 6px;
           text-transform: uppercase;
         }
@@ -587,7 +591,7 @@ export default function BlogPage({ src }) {
         <div className="blog-header">
           <div>
             <div className="blog-header-title">SYSTEM BLOG</div>
-            <div className="blog-header-sub">SILVER WOLF — FIELD NOTES FROM THE MACHINE</div>
+            <div className="blog-header-sub">SOULS SYNTAX — FIELD NOTES FROM THE MACHINE</div>
           </div>
           <div className="blog-view-toggle">
             <button

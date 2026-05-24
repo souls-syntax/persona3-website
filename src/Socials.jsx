@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import char1 from "./assets/char1.png";
-import char2 from "./assets/char2.png";
-import char3 from "./assets/char3.png";
+import char1 from "./assets/Silverwolf_Render1_Hoyo-transparents.png";
+import char2 from "./assets/Silverwolf_Render2_Hoyo-transparents.png";
+import char3 from "./assets/Silverwolf_Render3_Hoyo-transparents.png";
 import icon1 from "./assets/icon1.png";
 import icon2 from "./assets/icon2.png";
 import icon3 from "./assets/icon3.png";
@@ -13,6 +13,12 @@ const ITEMS = [
   { id: "twitter", title: "TWITTER",  subtitle: "@souls_syntax",  icon: icon2, img: char2 },
   { id: "email",   title: "CONTACT",  subtitle: "Direct Message", icon: icon3, img: char3 },
 ];
+
+const CHAR_CROPS = {
+  github: { objectPosition: "center 10%", transform: "scale(1.2)" },
+  twitter: { objectPosition: "center top", transform: "scale(1.3)" },
+  email: { objectPosition: "center 15%", transform: "scale(1.15)" },
+};
 
 const DETAIL_DATA = {
   0: {
@@ -336,7 +342,7 @@ export default function Socials() {
           <div className="hsr-card-subtitle">Path: Nihility // {currentItem.subtitle}</div>
           
           <div className="hsr-main-card">
-            <img src={currentItem.img} alt={currentItem.title} className="hsr-card-image" />
+            <img src={currentItem.img} alt={currentItem.title} className="hsr-card-image" style={CHAR_CROPS[currentItem.id]} />
           </div>
 
           <div className="hsr-icon-row">

@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import char1 from "./assets/char1.png";
-import char2 from "./assets/char2.png";
-import char3 from "./assets/char3.png";
+import char1 from "./assets/Silverwolf_Render1_Hoyo-transparents.png";
+import char2 from "./assets/Silverwolf_Render2_Hoyo-transparents.png";
+import char3 from "./assets/Silverwolf_Render3_Hoyo-transparents.png";
 import bgVideo from "./assets/silver-wolf-honkai-star-rail-4k-wallpaperwaifu-com.mp4";
 
 const CHARS = [char1, char2, char3];
+const CHAR_CROPS = [
+  { objectPosition: "center 15%", transform: "scale(1.6)" },
+  { objectPosition: "center 25%", transform: "scale(1.8)" },
+  { objectPosition: "center 10%", transform: "scale(1.4)" },
+];
 
 const REVEAL_CONTENT = [
   {
@@ -418,7 +423,7 @@ export default function AboutMe() {
           >
             <div className="sc-bar-red" />
             <div className="sc-bar">
-              <img className="sc-char" src={CHARS[i]} alt="" />
+              <img className="sc-char" src={CHARS[i]} alt="" style={CHAR_CROPS[i]} />
               <div className="sc-bar-fill" />
               <div className="sc-bar-shade" />
               <div className="sc-bar-content">
