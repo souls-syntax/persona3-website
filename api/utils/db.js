@@ -20,7 +20,6 @@ async function connectToDatabase() {
     cached.promise = mongoose.connect(MONGODB_URI, {
       bufferCommands: false,
       dbName: 'persona3',
-      tls: true,
       serverSelectionTimeoutMS: 10000,
       socketTimeoutMS: 45000,
     });

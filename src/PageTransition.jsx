@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "react-router-dom";
 
-const defaultBlocks = ["#0d1a3a", "#1a6aff", "#7dd4fc"];
+const defaultBlocks = ["#0c051a", "#7c3aed", "#22d3ee"];
 
 function DefaultTransition() {
   return defaultBlocks.map((color, i) => (
@@ -28,9 +28,9 @@ function DefaultTransition() {
 
 function AboutTransition() {
   const panels = [
-    { color: "#00184c", top: "-12vh", left: "-18vw", width: "86vw", delay: 0 },
-    { color: "#53edff", top: "24vh", left: "-10vw", width: "72vw", delay: 0.05 },
-    { color: "#ffffff", top: "58vh", left: "-14vw", width: "82vw", delay: 0.1 },
+    { color: "#080415", top: "-12vh", left: "-18vw", width: "86vw", delay: 0 },
+    { color: "#c084fc", top: "24vh", left: "-10vw", width: "72vw", delay: 0.05 },
+    { color: "#22d3ee", top: "58vh", left: "-14vw", width: "82vw", delay: 0.1 },
   ];
 
   return panels.map((panel, i) => (
@@ -63,9 +63,9 @@ function AboutTransition() {
 
 function SocialsTransition() {
   const stripes = [
-    { color: "#00184c", left: "72vw", width: "24vw", delay: 0 },
-    { color: "#00dff7", left: "80vw", width: "14vw", delay: 0.06 },
-    { color: "#ffffff", left: "88vw", width: "8vw", delay: 0.12 },
+    { color: "#0c051a", left: "72vw", width: "24vw", delay: 0 },
+    { color: "#a855f7", left: "80vw", width: "14vw", delay: 0.06 },
+    { color: "#67e8f9", left: "88vw", width: "8vw", delay: 0.12 },
   ];
 
   return stripes.map((stripe, i) => (
@@ -103,10 +103,10 @@ function TransitionOverlay({ variant }) {
 
 function ResumeTransition() {
   const cards = [
-    { top: "14vh", color: "#0f1760", delay: 0 },
-    { top: "31vh", color: "#7ff6ff", delay: 0.05 },
-    { top: "48vh", color: "#ffffff", delay: 0.1 },
-    { top: "65vh", color: "#0f1760", delay: 0.15 },
+    { top: "14vh", color: "#0a0314", delay: 0 },
+    { top: "31vh", color: "#7dd3fc", delay: 0.05 },
+    { top: "48vh", color: "#e879f9", delay: 0.1 },
+    { top: "65vh", color: "#0a0314", delay: 0.15 },
   ];
 
   return cards.map((card, i) => (
@@ -121,7 +121,7 @@ function ResumeTransition() {
         background: card.color,
         zIndex: 999 - i,
         clipPath: "polygon(0 0, 97% 0, 100% 100%, 3% 100%)",
-        boxShadow: card.color === "#ffffff" ? "10px 0 0 #d63232" : "none",
+        boxShadow: card.color === "#e879f9" ? "10px 0 0 #a855f7" : "none",
       }}
       initial={{ x: -900, opacity: 1 }}
       animate={{ x: [-900, 30, 0, 900] }}
@@ -140,9 +140,10 @@ export default function PageTransition({ children, variant = "default" }) {
 
   return (
     <AnimatePresence mode="wait">
-      <motion.div key={location.pathname} style={{ position: "relative" }}>
+      <motion.div key={location.pathname} style={{ position: "relative", width: "100%", height: "100vh" }}>
         <TransitionOverlay variant={variant} />
         <motion.div
+          style={{ width: "100%", height: "100%" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

@@ -56,8 +56,8 @@ export default function P3Menu({ onNavigate }) {
           pointer-events: none;
         }
 
-        .p3-stripe  { position:absolute; right:0; top:0; bottom:0; width:5px; background:#c4001a; z-index:10; pointer-events:none; }
-        .p3-stripe2 { position:absolute; right:9px; top:0; bottom:0; width:2px; background:rgba(245,122,139,0.22); z-index:10; pointer-events:none; }
+        .p3-stripe  { position:absolute; right:0; top:0; bottom:0; width:5px; background:#22d3ee; z-index:10; pointer-events:none; box-shadow: 0 0 10px #22d3ee; }
+        .p3-stripe2 { position:absolute; right:15px; top:0; bottom:0; width:2px; background:rgba(168, 85, 247, 0.5); z-index:10; pointer-events:none; box-shadow: 0 0 8px #a855f7; }
 
         .p3-menu {
           position: relative;
@@ -91,7 +91,7 @@ export default function P3Menu({ onNavigate }) {
           top: 50%; left: 50%;
           transform: translate(-50%, -50%);
           width: 120%; height: 200%;
-          background: radial-gradient(ellipse at center, rgba(255,100,180,0.35) 0%, transparent 70%);
+          background: radial-gradient(ellipse at center, rgba(168, 85, 247, 0.4) 0%, transparent 70%);
           filter: blur(18px);
           z-index: 0;
           pointer-events: none;
@@ -118,7 +118,7 @@ export default function P3Menu({ onNavigate }) {
           position: absolute;
           top: 50%;
           transform-origin: left center;
-          background: rgba(235, 80, 120, 0.85);
+          background: rgba(168, 85, 247, 0.85); /* Purple accent */
           z-index: 1;
           pointer-events: none;
           transform: translateY(-40%) translateX(-12px) scaleX(0);
@@ -132,7 +132,8 @@ export default function P3Menu({ onNavigate }) {
           position: absolute;
           top: 50%;
           transform-origin: left center;
-          background: #ffffff;
+          background: #22d3ee; /* Cyan highlight */
+          box-shadow: 0 0 10px rgba(34, 211, 238, 0.8);
           z-index: 2;
           transition: transform 0.22s cubic-bezier(0.22,1,0.36,1);
           pointer-events: none;
@@ -154,14 +155,14 @@ export default function P3Menu({ onNavigate }) {
         }
 
         .p3-label-dark {
-          color: #3ce2ff;
+          color: #d1d5db;
           transition: color 0.12s ease;
         }
-        .p3-row.active .p3-label-dark { color: #6b0010; }
-        .p3-row:hover:not(.active) .p3-label-dark { color: #00d9ff; }
+        .p3-row.active .p3-label-dark { color: #1e1b4b; }
+        .p3-row:hover:not(.active) .p3-label-dark { color: #facc15; }
 
         .p3-label-bright {
-          color: #ff2a2a;
+          color: #1e1b4b;
           position: absolute;
           inset: 0;
           z-index: 1;
@@ -184,10 +185,11 @@ export default function P3Menu({ onNavigate }) {
         .p3-hint-row {
           display: flex; align-items: center; gap: 8px;
           font-size: 13px; letter-spacing: 2px;
-          color: rgba(255,255,255,0.28);
+          color: rgba(255,255,255,0.4);
         }
         .p3-hint-key {
-          border: 1px solid rgba(255,255,255,0.2);
+          border: 1px solid #22d3ee;
+          color: #22d3ee;
           border-radius: 3px;
           padding: 1px 6px; font-size: 11px;
         }
@@ -202,7 +204,7 @@ export default function P3Menu({ onNavigate }) {
           font-size: 108px;
           line-height: 0.88;
           letter-spacing: 2px;
-          color: rgba(10, 10, 14, 0.64);
+          color: rgba(34, 211, 238, 0.4);
           transform: rotate(18deg);
           transform-origin: left top;
           user-select: none;
@@ -210,16 +212,18 @@ export default function P3Menu({ onNavigate }) {
           display: flex;
           flex-direction: column;
           align-items: flex-start;
+          text-shadow: 0 0 10px rgba(34, 211, 238, 0.2);
         }
         .p3-name-tag span:first-child {
-          color: rgba(0, 0, 0, 0.86);
+          color: rgba(255, 255, 255, 0.86);
+          text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
         }
       `}</style>
 
       <div className="p3-overlay">
         <div className="p3-name-tag">
-          <span>aakarsh's</span>
-          <span>persona</span>
+          <span>silver wolf //</span>
+          <span>system hack</span>
         </div>
         <div className="p3-stripe" />
         <div className="p3-stripe2" />
@@ -277,7 +281,7 @@ export default function P3Menu({ onNavigate }) {
                     <span
                       className="p3-label-base p3-label-bright"
                       style={{
-                        fontSize: item.fontSize,
+                         fontSize: item.fontSize,
                         clipPath: clipFn(estW, estH),
                       }}
                     >

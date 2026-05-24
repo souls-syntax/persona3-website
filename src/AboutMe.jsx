@@ -3,13 +3,9 @@ import { useNavigate } from "react-router-dom";
 import char1 from "./assets/char1.png";
 import char2 from "./assets/char2.png";
 import char3 from "./assets/char3.png";
-import bgVideo from "./assets/main1.mp4";
-import mainm from "./assets/mainm.jpeg";
-import mainm2 from "./assets/mainm2.jpeg";
-import mainf from "./assets/mainf.jpeg";
+import bgVideo from "./assets/silver-wolf-honkai-star-rail-4k-wallpaperwaifu-com.mp4";
 
 const CHARS = [char1, char2, char3];
-const MAIN_IMAGES = [mainm, mainm2, mainf];
 
 const REVEAL_CONTENT = [
   {
@@ -45,24 +41,24 @@ const ITEMS = [
     id: "profile",  label: "ABOUT ME",    handle: "@souls-syntax",
     href: "https://github.com/souls-syntax",
     stats: [
-      { tag: "REPO", value: "57",  color: "#3ce2ff" },
-      { tag: "FOL",  value: "22",  color: "#9147ff" },
+      { tag: "REPO", value: "57",  color: "#22d3ee" },
+      { tag: "FOL",  value: "22",  color: "#a855f7" },
     ],
   },
   {
     id: "stack",    label: "TECH STACK",  handle: "C · CUDA · Zig",
     href: "https://github.com/souls-syntax?tab=repositories",
     stats: [
-      { tag: "LANG", value: "5+",  color: "#4a8fff" },
-      { tag: "SYS",  value: "LOW", color: "#22c55e" },
+      { tag: "LANG", value: "5+",  color: "#a855f7" },
+      { tag: "SYS",  value: "LOW", color: "#facc15" },
     ],
   },
   {
     id: "projects", label: "PROJECTS",    handle: "@souls-syntax repos",
     href: "https://github.com/souls-syntax?tab=repositories",
     stats: [
-      { tag: "PROJ", value: "57",  color: "#f59e0b" },
-      { tag: "⭐",   value: "13",  color: "#fbbf24" },
+      { tag: "PROJ", value: "57",  color: "#22d3ee" },
+      { tag: "⭐",   value: "13",  color: "#facc15" },
     ],
   },
 ];
@@ -74,7 +70,7 @@ export default function AboutMe() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const t = setTimeout(() => setMounted(true), 60);
+    const t = setTimeout(() => setMounted(true), 100);
     return () => clearTimeout(t);
   }, []);
 
@@ -95,8 +91,9 @@ export default function AboutMe() {
   }, [active, navigate, revealed]);
 
   return (
-    <div id="menu-screen">
-      <video src={bgVideo} autoPlay loop muted playsInline />
+    <div id="hsr-about-screen">
+      <video className="hsr-bg-video" src={bgVideo} autoPlay loop muted playsInline />
+      <div className="hsr-dim-overlay" />
       {revealed && <div key={`dim-${active}`} className="sc-dim" />}
       {revealed && (
         <div key={`panel-${active}`} className={`sc-reveal-panel${mounted ? " mounted" : ""}`}>
@@ -121,13 +118,38 @@ export default function AboutMe() {
         <div key={`portrait-${active}`} className={`sc-main-portrait-shell${mounted ? " mounted" : ""}`}>
           <img
             className="sc-main-portrait"
-            src={MAIN_IMAGES[active]}
+            src={CHARS[active]}
             alt=""
           />
         </div>
       )}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,700;1,700&family=Montserrat:wght@300&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,700;1,700&family=Montserrat:wght@300&family=Inter:wght@400;600;800&display=swap');
+
+        #hsr-about-screen {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          background: #06030f;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .hsr-bg-video {
+          position: absolute;
+          inset: 0;
+          width: 100%; height: 100%;
+          object-fit: cover;
+          filter: blur(10px) brightness(0.4) saturate(1.2);
+          z-index: 0;
+        }
+        
+        .hsr-dim-overlay {
+          position: absolute; inset: 0;
+          background: radial-gradient(circle at 50% 50%, transparent 20%, rgba(6,3,15,0.8) 100%);
+          z-index: 1;
+        }
 
         .sc-root {
           position: absolute;
@@ -146,7 +168,7 @@ export default function AboutMe() {
           position: absolute;
           inset: 0;
           z-index: 12;
-          background: rgba(40, 45, 54, 0.68);
+          background: rgba(10, 5, 20, 0.85);
           pointer-events: none;
           animation: sc-dim-in 0.32s ease-out;
         }
@@ -178,8 +200,8 @@ export default function AboutMe() {
         }
 
         .sc-main-portrait-shell {
-          position: absolute; top: 0; right: -3vw; z-index: 13;
-          pointer-events: none; width: 43vw; height: 100vh; overflow: hidden;
+          position: absolute; top: 0; right: 5vw; z-index: 13;
+          pointer-events: none; width: 35vw; height: 100vh; overflow: hidden;
           opacity: 0; transform: translateX(24px) skewX(-8deg) scale(0.98);
           transition: opacity 0.35s ease, transform 0.35s ease;
         }
@@ -191,9 +213,9 @@ export default function AboutMe() {
         .sc-reveal-panel {
           position: absolute; top: 44vh; left: -6vw; width: 88vw; height: 60vh;
           z-index: 12; pointer-events: none;
-          background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(243,246,252,0.98) 100%);
+          background: linear-gradient(180deg, rgba(20, 10, 35, 0.98) 0%, rgba(10, 5, 20, 0.98) 100%);
           clip-path: polygon(0 0, 100% 0, calc(100% - 88px) 100%, 0 100%);
-          box-shadow: 0 0 0 2px rgba(255,255,255,0.18), 18px 0 0 rgba(215, 13, 44, 0.82), 28px 0 0 rgba(255,255,255,0.26);
+          box-shadow: 0 0 0 2px rgba(34,211,238,0.18), 18px 0 0 rgba(168, 85, 247, 0.82), 28px 0 0 rgba(34,211,238,0.26);
           opacity: 0; transform: translateX(-40px) rotate(-20deg); transform-origin: left bottom;
           transition: opacity 0.3s ease, transform 0.35s ease;
         }
@@ -203,30 +225,31 @@ export default function AboutMe() {
         }
         .sc-reveal-panel::before {
           content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 8px;
-          background: linear-gradient(180deg, #e03d31 0%, #eb3333 100%);
+          background: linear-gradient(180deg, #22d3ee 0%, #06b6d4 100%);
           clip-path: inherit;
         }
         .sc-reveal-upper-bar {
           position: absolute; top: 10%; left: 0%; width: 100%; height: 40%;
-          background: rgba(0, 0, 0, 0.92);
+          background: rgba(15, 10, 25, 0.92);
           clip-path: polygon(0 0, 100% 0, calc(100% - 22px) 100%, 0 100%);
-          box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
+          box-shadow: 0 0 0 1px rgba(34,211,238,0.3);
           display: flex; flex-direction: column; align-items: center; justify-content: center;
-          gap: 10px; color: #fff; text-align: center;
+          gap: 10px; color: #facc15; text-align: center;
         }
         .sc-reveal-upper-line {
-          font-family: 'Montserrat', sans-serif; font-weight: 300;
-          font-size: 20px; letter-spacing: 0.5px; line-height: 1.15;
+          font-family: 'Inter', sans-serif; font-weight: 800;
+          font-size: 24px; letter-spacing: 0.5px; line-height: 1.15;
+          text-transform: uppercase; text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
         .sc-reveal-lower-bar {
           position: absolute; top: 58%; right: 0; width: 48%; height: 20%;
-          background: rgba(0, 0, 0, 0.92);
+          background: rgba(168, 85, 247, 0.92);
           clip-path: polygon(0 0, 100% 0, calc(100% - 22px) 100%, 0 100%);
           box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
           display: flex; align-items: center; justify-content: flex-start;
-          color: #fff; font-family: 'Montserrat', sans-serif; font-weight: 300;
-          font-size: 22px; letter-spacing: 0.4px; text-transform: lowercase;
-          padding-left: 22px;
+          color: #fff; font-family: 'Inter', sans-serif; font-weight: 600;
+          font-size: 18px; letter-spacing: 0.4px; text-transform: uppercase;
+          padding-left: 22px; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
 
         @keyframes sc-right-nav-pop {
@@ -247,19 +270,20 @@ export default function AboutMe() {
           paint-order: stroke fill; background: none; border: none; padding: 0 6px;
         }
         .sc-right-nav .sc-nav-dot {
-          width: 16px; height: 16px; border-radius: 999px; background: #111;
-          margin: 0 10px; flex-shrink: 0;
+          width: 16px; height: 16px; border-radius: 999px; background: #22d3ee;
+          margin: 0 10px; flex-shrink: 0; box-shadow: 0 0 8px #22d3ee;
         }
         .sc-right-nav .sc-nav-arrow {
-          font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: #c4001a;
+          font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: #a855f7;
           display: inline-block; user-select: none;
         }
         .sc-right-nav .sc-nav-arrow.left  { animation: sc-arrow-left  0.8s ease-in-out infinite; }
         .sc-right-nav .sc-nav-arrow.right { animation: sc-arrow-right 0.8s ease-in-out infinite; }
 
         .sc-main-portrait {
-          width: 100%; height: 100%; object-fit: cover; object-position: top right;
-          transform: skewX(8deg) scale(1.08); transform-origin: top right;
+          width: 100%; height: 100%; object-fit: contain; object-position: center;
+          transform: skewX(8deg) scale(1.08); transform-origin: center;
+          filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.4));
         }
 
         /* ── Each bar ── */
@@ -284,7 +308,7 @@ export default function AboutMe() {
 
         .sc-bar-red {
           position: absolute; top: 0; left: 0; width: 45vw; height: 64px;
-          background: #c4001a;
+          background: #a855f7;
           clip-path: polygon(50% 0, 100% 0, 100% 100%, calc(50% - 10px) 100%);
           transform: translateY(-7px); opacity: 0;
           transition: opacity 0.2s ease; z-index: 0; pointer-events: none;
@@ -374,10 +398,12 @@ export default function AboutMe() {
         .sc-footer.mounted { opacity: 1; }
         .sc-footer-row {
           display: flex; align-items: center; gap: 8px;
-          font-size: 13px; letter-spacing: 2px; color: rgba(255,255,255,0.22);
+          font-size: 13px; letter-spacing: 2px; color: rgba(255,255,255,0.4);
         }
         .sc-footer-key {
-          border: 1px solid rgba(255,255,255,0.15); border-radius: 3px;
+          border: 1px solid #22d3ee;
+          color: #22d3ee;
+          border-radius: 3px;
           padding: 1px 6px; font-size: 11px;
         }
       `}</style>

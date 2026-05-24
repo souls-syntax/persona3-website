@@ -1,13 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import bgVideo from "./assets/main1.mp4";
 
 const LANG_COLORS = {
   C: "#5b8fcc", "C++": "#f34b7d", Zig: "#f7a41d", CUDA: "#76b900",
-  Lua: "#000080", Systems: "#c4001a", OS: "#8b5cf6", Shell: "#22c55e",
+  Lua: "#000080", Systems: "#a855f7", OS: "#8b5cf6", Shell: "#22c55e",
   Memory: "#ea580c", Linux: "#ef4444", Kernel: "#dc2626", POSIX: "#0891b2",
   GPU: "#76b900", Performance: "#f59e0b", Neovim: "#65a30d", Tooling: "#6366f1",
-  ELF: "#7c3aed", Linker: "#9333ea", Series: "#c4001a", Default: "#555",
+  ELF: "#7c3aed", Linker: "#9333ea", Series: "#a855f7", Default: "#555",
 };
 
 function tagColor(tag) {
@@ -24,7 +23,7 @@ function fuzzyScore(blog, query) {
   return score;
 }
 
-export default function BlogPage() {
+export default function BlogPage({ src }) {
   const navigate = useNavigate();
   const [blogs, setBlogs]           = useState([]);
   const [series, setSeries]         = useState([]);
@@ -115,11 +114,12 @@ export default function BlogPage() {
   }, [results, activePost, navigate]);
 
   return (
-    <div id="menu-screen">
-      <video src={bgVideo} autoPlay loop muted playsInline />
+    <div id="hsr-blog-screen" style={{ position: 'absolute', inset: 0, overflow: 'hidden', background: '#06030f' }}>
+      <video className="hsr-bg-video" src={src} autoPlay loop muted playsInline style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, filter: 'blur(10px) brightness(0.4) saturate(1.2)' }} />
+      <div className="hsr-dim-overlay" style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 50%, transparent 20%, rgba(6,3,15,0.8) 100%)', zIndex: 1 }} />
 
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Barlow+Condensed:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Barlow+Condensed:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap');
 
         /* ── Layout ── */
         .blog-overlay {
@@ -130,7 +130,7 @@ export default function BlogPage() {
           flex-direction: column;
           overflow: hidden;
           /* Blurred dark tint over the background video */
-          background: rgba(4, 6, 14, 0.62);
+          background: rgba(10, 5, 20, 0.75);
           backdrop-filter: blur(14px) saturate(0.7);
           -webkit-backdrop-filter: blur(14px) saturate(0.7);
         }
@@ -140,7 +140,7 @@ export default function BlogPage() {
           position: relative;
           flex-shrink: 0;
           height: 90px;
-          background: #c4001a;
+          background: #a855f7;
           clip-path: polygon(0 0, 100% 0, 97% 100%, 0 100%);
           display: flex;
           align-items: center;
@@ -149,22 +149,31 @@ export default function BlogPage() {
           box-shadow: 0 8px 32px rgba(0,0,0,0.8);
           z-index: 2;
         }
+        .blog-header::after {
+          content: "";
+          position: absolute;
+          top: 0; left: 0; width: 100%; height: 4px;
+          background: #22d3ee;
+        }
         .blog-header-title {
-          font-family: 'Anton', sans-serif;
-          font-size: 64px;
+          font-family: 'Inter', sans-serif;
+          font-weight: 800;
+          font-size: 52px;
           letter-spacing: 4px;
-          color: #fff;
+          color: #facc15;
           line-height: 1;
-          font-style: italic;
           user-select: none;
           white-space: nowrap;
+          text-shadow: 0 2px 8px rgba(0,0,0,0.5);
         }
         .blog-header-sub {
-          font-family: 'Bebas Neue', sans-serif;
-          font-size: 18px;
+          font-family: 'Inter', sans-serif;
+          font-weight: 600;
+          font-size: 14px;
           letter-spacing: 3px;
-          color: rgba(255,255,255,0.55);
+          color: rgba(255,255,255,0.85);
           padding-top: 6px;
+          text-transform: uppercase;
         }
 
         /* ── View toggle ── */
@@ -179,7 +188,7 @@ export default function BlogPage() {
           letter-spacing: 2px;
           padding: 6px 16px;
           background: rgba(0,0,0,0.3);
-          border: 1px solid rgba(255,255,255,0.2);
+          border: 1px solid rgba(34,211,238,0.2);
           color: rgba(255,255,255,0.6);
           cursor: pointer;
           transition: all 0.15s ease;
@@ -187,12 +196,12 @@ export default function BlogPage() {
         }
         .blog-view-btn.active {
           background: #fff;
-          color: #c4001a;
+          color: #a855f7;
           border-color: transparent;
         }
         .blog-view-btn:hover:not(.active) {
-          background: rgba(255,255,255,0.1);
-          color: #fff;
+          background: rgba(34,211,238,0.1);
+          color: #22d3ee;
         }
 
         /* ── Search bar ── */
@@ -200,24 +209,24 @@ export default function BlogPage() {
           position: relative;
           flex-shrink: 0;
           padding: 14px 40px 10px;
-          background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 100%);
+          background: linear-gradient(180deg, rgba(15,10,25,0.55) 0%, rgba(10,5,20,0.35) 100%);
           display: flex;
           align-items: center;
           gap: 14px;
-          border-bottom: 1px solid rgba(196,0,26,0.35);
+          border-bottom: 1px solid rgba(168,85,247,0.35);
         }
         .blog-search-label {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 14px;
           letter-spacing: 3px;
-          color: #c4001a;
+          color: #22d3ee;
           flex-shrink: 0;
           user-select: none;
         }
         .blog-search-input {
           flex: 1;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(196,0,26,0.4);
+          background: rgba(34,211,238,0.06);
+          border: 1px solid rgba(168,85,247,0.4);
           border-radius: 0;
           clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
           color: #fff;
@@ -225,20 +234,21 @@ export default function BlogPage() {
           font-size: 16px;
           padding: 10px 16px;
           outline: none;
-          transition: border-color 0.2s ease, background 0.2s ease;
+          transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
         }
         .blog-search-input:focus {
-          border-color: rgba(196,0,26,0.9);
-          background: rgba(255,255,255,0.1);
+          border-color: rgba(34,211,238,0.9);
+          background: rgba(34,211,238,0.1);
+          box-shadow: 0 0 10px rgba(34,211,238,0.2);
         }
         .blog-search-input::placeholder {
-          color: rgba(255,255,255,0.25);
+          color: rgba(255,255,255,0.3);
         }
         .blog-search-count {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 18px;
           letter-spacing: 2px;
-          color: rgba(255,255,255,0.35);
+          color: #a855f7;
           flex-shrink: 0;
         }
 
@@ -250,7 +260,7 @@ export default function BlogPage() {
           gap: 6px;
           padding: 8px 40px;
           overflow-x: auto;
-          background: rgba(0,0,0,0.3);
+          background: rgba(10,5,20,0.3);
           scrollbar-width: none;
         }
         .blog-tags-row::-webkit-scrollbar { display: none; }
@@ -266,11 +276,13 @@ export default function BlogPage() {
           flex-shrink: 0;
           clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
         }
-        .blog-tag-pill:hover { opacity: 0.8; }
+        .blog-tag-pill:hover { opacity: 0.8; box-shadow: 0 0 8px rgba(34,211,238,0.4); }
         .blog-tag-pill.active {
-          background: #c4001a !important;
-          border-color: #c4001a !important;
-          color: #fff !important;
+          background: #22d3ee !important;
+          border-color: #22d3ee !important;
+          color: #06030f !important;
+          font-weight: bold;
+          box-shadow: 0 0 10px #22d3ee;
         }
 
         /* ── Content area ── */
@@ -279,10 +291,10 @@ export default function BlogPage() {
           overflow-y: auto;
           padding: 16px 40px 40px;
           scrollbar-width: thin;
-          scrollbar-color: rgba(196,0,26,0.5) transparent;
+          scrollbar-color: rgba(168,85,247,0.5) transparent;
         }
         .blog-content::-webkit-scrollbar { width: 4px; }
-        .blog-content::-webkit-scrollbar-thumb { background: rgba(196,0,26,0.5); }
+        .blog-content::-webkit-scrollbar-thumb { background: rgba(168,85,247,0.5); }
 
         /* ── Post Card ── */
         @keyframes blog-card-in {
@@ -292,19 +304,20 @@ export default function BlogPage() {
         .blog-card {
           position: relative;
           margin-bottom: 10px;
-          background: rgba(10,10,20,0.82);
+          background: rgba(20,15,35,0.82);
           clip-path: polygon(0 0, 100% 0, calc(100% - 18px) 100%, 0 100%);
           border-left: 3px solid transparent;
           cursor: pointer;
-          transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+          transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
           animation: blog-card-in 0.3s ease both;
           overflow: hidden;
         }
         .blog-card:hover,
         .blog-card.active-card {
-          background: rgba(20,20,40,0.95);
-          border-left-color: #c4001a;
+          background: rgba(30,20,50,0.95);
+          border-left-color: #22d3ee;
           transform: translateX(4px);
+          box-shadow: 0 4px 15px rgba(168,85,247,0.2);
         }
         .blog-card-inner {
           padding: 18px 24px 18px 22px;
@@ -317,9 +330,9 @@ export default function BlogPage() {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 11px;
           letter-spacing: 2px;
-          color: #c4001a;
-          background: rgba(196,0,26,0.12);
-          border: 1px solid rgba(196,0,26,0.3);
+          color: #facc15;
+          background: rgba(250,204,21,0.12);
+          border: 1px solid rgba(250,204,21,0.3);
           padding: 2px 8px;
           display: inline-flex;
           align-items: center;
@@ -328,21 +341,24 @@ export default function BlogPage() {
           clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
         }
         .blog-card-title {
-          font-family: 'Anton', sans-serif;
-          font-size: 26px;
-          letter-spacing: 1px;
+          font-family: 'Inter', sans-serif;
+          font-weight: 800;
+          font-size: 24px;
+          letter-spacing: 0.5px;
           color: #eef6ff;
-          line-height: 1.1;
+          line-height: 1.2;
           margin-bottom: 6px;
-          transition: color 0.15s ease;
+          transition: color 0.15s ease, text-shadow 0.15s ease;
         }
         .blog-card:hover .blog-card-title,
         .blog-card.active-card .blog-card-title {
-          color: #fff;
+          color: #22d3ee;
+          text-shadow: 0 0 8px rgba(34,211,238,0.3);
         }
         .blog-card-excerpt {
-          font-family: 'Barlow Condensed', sans-serif;
-          font-size: 15px;
+          font-family: 'Inter', sans-serif;
+          font-weight: 400;
+          font-size: 14px;
           color: rgba(200,215,230,0.65);
           line-height: 1.45;
           margin-bottom: 10px;
@@ -371,17 +387,17 @@ export default function BlogPage() {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 13px;
           letter-spacing: 2px;
-          color: rgba(255,255,255,0.3);
+          color: rgba(255,255,255,0.4);
         }
         .blog-card-arrow {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 22px;
-          color: rgba(196,0,26,0.5);
+          color: rgba(168,85,247,0.5);
           transition: color 0.18s ease, transform 0.18s ease;
         }
         .blog-card:hover .blog-card-arrow,
         .blog-card.active-card .blog-card-arrow {
-          color: #c4001a;
+          color: #22d3ee;
           transform: translateX(4px);
         }
 
@@ -390,7 +406,7 @@ export default function BlogPage() {
           position: absolute;
           top: 0; left: 0; bottom: 0;
           width: 28px;
-          background: linear-gradient(180deg, #c4001a 0%, rgba(196,0,26,0.3) 100%);
+          background: linear-gradient(180deg, #a855f7 0%, rgba(168,85,247,0.3) 100%);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -408,39 +424,50 @@ export default function BlogPage() {
         /* ── Series View ── */
         .series-card {
           margin-bottom: 18px;
-          background: rgba(10,10,20,0.82);
+          background: rgba(20,15,35,0.82);
           clip-path: polygon(0 0, 100% 0, calc(100% - 18px) 100%, 0 100%);
           cursor: pointer;
           animation: blog-card-in 0.3s ease both;
+          border-left: 3px solid transparent;
+          transition: border-color 0.2s ease, background 0.2s ease;
+        }
+        .series-card:hover {
+          background: rgba(30,20,50,0.95);
+          border-left-color: #a855f7;
         }
         .series-header {
           padding: 20px 28px 14px;
-          border-bottom: 1px solid rgba(196,0,26,0.2);
+          border-bottom: 1px solid rgba(168,85,247,0.2);
           display: flex;
           align-items: flex-start;
           gap: 16px;
         }
         .series-title {
-          font-family: 'Anton', sans-serif;
-          font-size: 32px;
-          letter-spacing: 2px;
+          font-family: 'Inter', sans-serif;
+          font-weight: 800;
+          font-size: 28px;
+          letter-spacing: 0.5px;
           color: #fff;
           line-height: 1.1;
           flex: 1;
+        }
+        .series-card:hover .series-title {
+          color: #22d3ee;
         }
         .series-chapter-count {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 14px;
           letter-spacing: 2px;
-          color: #c4001a;
-          background: rgba(196,0,26,0.12);
-          border: 1px solid rgba(196,0,26,0.4);
+          color: #facc15;
+          background: rgba(250,204,21,0.12);
+          border: 1px solid rgba(250,204,21,0.4);
           padding: 4px 12px;
           flex-shrink: 0;
         }
         .series-desc {
-          font-family: 'Barlow Condensed', sans-serif;
-          font-size: 15px;
+          font-family: 'Inter', sans-serif;
+          font-weight: 400;
+          font-size: 14px;
           color: rgba(200,215,230,0.6);
           line-height: 1.45;
           margin-top: 6px;
@@ -468,16 +495,17 @@ export default function BlogPage() {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 11px;
           letter-spacing: 1px;
-          color: #fff;
-          background: #c4001a;
+          color: #06030f;
+          background: #22d3ee;
           padding: 2px 8px;
           flex-shrink: 0;
           clip-path: polygon(0 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+          font-weight: bold;
         }
         .series-chapter-title {
-          font-family: 'Barlow Condensed', sans-serif;
-          font-size: 17px;
-          font-weight: 700;
+          font-family: 'Inter', sans-serif;
+          font-size: 15px;
+          font-weight: 600;
           color: rgba(220,235,245,0.75);
           flex: 1;
           transition: color 0.15s ease;
@@ -486,13 +514,16 @@ export default function BlogPage() {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 12px;
           letter-spacing: 1px;
-          color: rgba(255,255,255,0.25);
+          color: rgba(255,255,255,0.35);
           flex-shrink: 0;
         }
         .series-chapter-arrow {
           font-size: 14px;
-          color: rgba(196,0,26,0.5);
+          color: rgba(34,211,238,0.5);
           flex-shrink: 0;
+        }
+        .series-chapter-row:hover .series-chapter-arrow {
+          color: #22d3ee;
         }
 
         /* ── Empty state ── */
@@ -501,16 +532,17 @@ export default function BlogPage() {
           padding: 80px 40px;
         }
         .blog-empty-title {
-          font-family: 'Anton', sans-serif;
-          font-size: 48px;
-          color: rgba(255,255,255,0.2);
-          letter-spacing: 4px;
+          font-family: 'Inter', sans-serif;
+          font-weight: 800;
+          font-size: 36px;
+          color: rgba(255,255,255,0.3);
+          letter-spacing: 2px;
         }
         .blog-empty-sub {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 16px;
           letter-spacing: 2px;
-          color: rgba(255,255,255,0.15);
+          color: rgba(255,255,255,0.25);
           margin-top: 8px;
         }
 
@@ -529,10 +561,11 @@ export default function BlogPage() {
         .blog-footer-row {
           display: flex; align-items: center; gap: 8px;
           font-size: 13px; letter-spacing: 2px;
-          color: rgba(255,255,255,0.22);
+          color: rgba(255,255,255,0.4);
         }
         .blog-footer-key {
-          border: 1px solid rgba(255,255,255,0.15);
+          border: 1px solid #22d3ee;
+          color: #22d3ee;
           border-radius: 3px;
           padding: 1px 6px; font-size: 11px;
         }
@@ -553,8 +586,8 @@ export default function BlogPage() {
         {/* Header */}
         <div className="blog-header">
           <div>
-            <div className="blog-header-title">BLOG</div>
-            <div className="blog-header-sub">AAKARSH KASHYAP — FIELD NOTES FROM THE MACHINE</div>
+            <div className="blog-header-title">SYSTEM BLOG</div>
+            <div className="blog-header-sub">SILVER WOLF — FIELD NOTES FROM THE MACHINE</div>
           </div>
           <div className="blog-view-toggle">
             <button
@@ -611,14 +644,14 @@ export default function BlogPage() {
         <div className="blog-content">
           {loading && (
             <div className="blog-empty">
-              <div className="blog-empty-title" style={{ fontSize: 28, color: '#c4001a', letterSpacing: 6 }}>LOADING...</div>
+              <div className="blog-empty-title" style={{ fontSize: 28, color: '#22d3ee', letterSpacing: 6 }}>LOADING...</div>
             </div>
           )}
           {!loading && fetchError && (
             <div className="blog-empty">
-              <div className="blog-empty-title" style={{ fontSize: 28, color: '#c4001a' }}>API ERROR</div>
-              <div className="blog-empty-sub" style={{ color: 'rgba(255,120,120,0.7)', fontFamily: 'JetBrains Mono, monospace', fontSize: 12, marginTop: 12, maxWidth: 600, wordBreak: 'break-all' }}>{fetchError}</div>
-              <div className="blog-empty-sub" style={{ marginTop: 16 }}>Make sure <code style={{ color: '#ff6eb4', fontFamily: 'monospace' }}>vercel dev</code> is running on port 3000</div>
+              <div className="blog-empty-title" style={{ fontSize: 28, color: '#ef4444' }}>API ERROR</div>
+              <div className="blog-empty-sub" style={{ color: 'rgba(239,68,68,0.7)', fontFamily: 'JetBrains Mono, monospace', fontSize: 12, marginTop: 12, maxWidth: 600, wordBreak: 'break-all', margin: '0 auto' }}>{fetchError}</div>
+              <div className="blog-empty-sub" style={{ marginTop: 16 }}>Make sure <code style={{ color: '#a855f7', fontFamily: 'monospace' }}>vercel dev</code> is running on port 3000</div>
             </div>
           )}
           {view === "posts" && !loading && !fetchError && (

@@ -1,9 +1,6 @@
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
-import menuVideo from './assets/circletransition.mp4'
-import main1 from './assets/main1.mp4'
-import main2 from './assets/main1.mp4'
-import main3 from './assets/main1.mp4'
+import menuVideo from './assets/silver-wolf-honkai-star-rail-4k-wallpaperwaifu-com.mp4'
 import P3Menu from './P3Menu'
 import VideoPage from './VideoPage'
 import ResumePage from './ResumePage'
@@ -19,7 +16,8 @@ function MenuScreen() {
   const navigate = useNavigate()
   return (
     <div id="menu-screen">
-      <video src={menuVideo} autoPlay loop muted playsInline />
+      <video className="hsr-bg-video" src={menuVideo} autoPlay loop muted playsInline style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, filter: 'blur(10px) brightness(0.4) saturate(1.2)' }} />
+      <div className="hsr-dim-overlay" style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 50%, transparent 20%, rgba(6,3,15,0.8) 100%)', zIndex: 1 }} />
       <P3Menu onNavigate={(page) => {
         if (page === 'github') {
           window.open('https://github.com/souls-syntax', '_blank')
@@ -43,22 +41,22 @@ function AnimatedRoutes() {
           <PageTransition variant="about"><AboutMe /></PageTransition>
         } />
         <Route path="/resume" element={
-          <PageTransition><ResumePage src={main2} /></PageTransition>
+          <PageTransition><ResumePage src={menuVideo} /></PageTransition>
         } />
         <Route path="/socials" element={
           <PageTransition variant="socials"><Socials /></PageTransition>
         } />
         <Route path="/sideproj" element={
-          <PageTransition><ResumePage src={main3} mode="projects" /></PageTransition>
+          <PageTransition><ResumePage src={menuVideo} mode="projects" /></PageTransition>
         } />
         <Route path="/blog" element={
-          <PageTransition><BlogPage /></PageTransition>
+          <PageTransition><BlogPage src={menuVideo} /></PageTransition>
         } />
         <Route path="/blog/:id" element={
-          <PageTransition><BlogPost /></PageTransition>
+          <PageTransition><BlogPost src={menuVideo} /></PageTransition>
         } />
         <Route path="/admin" element={
-          <PageTransition><AdminPage /></PageTransition>
+          <PageTransition><AdminPage src={menuVideo} /></PageTransition>
         } />
       </Routes>
     </AnimatePresence>

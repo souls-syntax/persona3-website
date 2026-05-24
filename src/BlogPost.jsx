@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BLOGS, SERIES, getSeriesChapters } from "./data/blogs.js";
 import { buildThreadTree, getIdentity, saveIdentity, formatTime } from "./data/comments.js";
-import bgVideo from "./assets/main1.mp4";
 
 // ── Markdown renderer (lightweight, no deps) ─────────────────────────────────
 function renderMarkdown(md) {
@@ -467,7 +466,7 @@ function CommentSection({ postId }) {
 }
 
 // ── Main BlogPost component ───────────────────────────────────────────────────
-export default function BlogPost() {
+export default function BlogPost({ src }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [mounted, setMounted] = useState(false);
@@ -526,10 +525,11 @@ export default function BlogPost() {
 
   if (loading) {
     return (
-      <div id="menu-screen">
-        <video src={bgVideo} autoPlay loop muted playsInline />
+      <div id="hsr-blog-screen" style={{ position: 'absolute', inset: 0, overflow: 'hidden', background: '#06030f' }}>
+      <video className="hsr-bg-video" src={src} autoPlay loop muted playsInline style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, filter: 'blur(10px) brightness(0.4) saturate(1.2)' }} />
+      <div className="hsr-dim-overlay" style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 50%, transparent 20%, rgba(6,3,15,0.8) 100%)', zIndex: 1 }} />
         <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.7)" }}>
-          <div style={{ fontFamily: "Anton, sans-serif", fontSize: 32, color: "#c4001a", letterSpacing: 4 }}>LOADING...</div>
+          <div style={{ fontFamily: "Anton, sans-serif", fontSize: 32, color: "#22d3ee", letterSpacing: 4 }}>LOADING...</div>
         </div>
       </div>
     );
@@ -537,13 +537,14 @@ export default function BlogPost() {
 
   if (!post) {
     return (
-      <div id="menu-screen">
-        <video src={bgVideo} autoPlay loop muted playsInline />
+      <div id="hsr-blog-screen" style={{ position: 'absolute', inset: 0, overflow: 'hidden', background: '#06030f' }}>
+      <video className="hsr-bg-video" src={src} autoPlay loop muted playsInline style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, filter: 'blur(10px) brightness(0.4) saturate(1.2)' }} />
+      <div className="hsr-dim-overlay" style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 50%, transparent 20%, rgba(6,3,15,0.8) 100%)', zIndex: 1 }} />
         <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 16 }}>
-          <div style={{ fontFamily: "Anton, sans-serif", fontSize: 64, color: "#c4001a", letterSpacing: 4 }}>404</div>
+          <div style={{ fontFamily: "Anton, sans-serif", fontSize: 64, color: "#22d3ee", letterSpacing: 4 }}>404</div>
           <div style={{ fontFamily: "Bebas Neue, sans-serif", fontSize: 18, color: "rgba(255,255,255,0.4)", letterSpacing: 3 }}>POST NOT FOUND</div>
           <button
-            style={{ fontFamily: "Bebas Neue, sans-serif", fontSize: 16, letterSpacing: 2, padding: "10px 24px", background: "#c4001a", border: "none", color: "#fff", cursor: "pointer", marginTop: 16 }}
+            style={{ fontFamily: "Bebas Neue, sans-serif", fontSize: 16, letterSpacing: 2, padding: "10px 24px", background: "#22d3ee", border: "none", color: "#fff", cursor: "pointer", marginTop: 16 }}
             onClick={() => navigate("/blog")}
           >← BACK TO BLOG</button>
         </div>
@@ -551,11 +552,17 @@ export default function BlogPost() {
     );
   }
 
+  const { series, chapters } = seriesInfo;
+  const currentChapterIdx = chapters.findIndex(c => c.id === id);
+  const prevChapter = currentChapterIdx > 0 ? chapters[currentChapterIdx - 1] : null;
+  const nextChapter = currentChapterIdx !== -1 && currentChapterIdx < chapters.length - 1 ? chapters[currentChapterIdx + 1] : null;
+
   const htmlContent = renderMarkdown(post.content);
 
   return (
-    <div id="menu-screen">
-      <video src={bgVideo} autoPlay loop muted playsInline />
+    <div id="hsr-blog-screen" style={{ position: 'absolute', inset: 0, overflow: 'hidden', background: '#06030f' }}>
+      <video className="hsr-bg-video" src={src} autoPlay loop muted playsInline style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, filter: 'blur(10px) brightness(0.4) saturate(1.2)' }} />
+      <div className="hsr-dim-overlay" style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 50%, transparent 20%, rgba(6,3,15,0.8) 100%)', zIndex: 1 }} />
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Barlow+Condensed:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap');
@@ -584,7 +591,7 @@ export default function BlogPost() {
           position: relative;
           flex-shrink: 0;
           background: rgba(0,0,0,0.85);
-          border-bottom: 2px solid #c4001a;
+          border-bottom: 2px solid #22d3ee;
           padding: 10px 32px;
           display: flex;
           align-items: center;
@@ -595,16 +602,16 @@ export default function BlogPost() {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 14px;
           letter-spacing: 2px;
-          color: #c4001a;
+          color: #22d3ee;
           background: none;
-          border: 1px solid rgba(196,0,26,0.4);
+          border: 1px solid rgba(34,211,238,0.4);
           padding: 4px 14px;
           cursor: pointer;
           transition: all 0.15s ease;
           clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
         }
         .post-back-btn:hover {
-          background: #c4001a;
+          background: #22d3ee;
           color: #fff;
         }
         .post-breadcrumb {
@@ -616,7 +623,7 @@ export default function BlogPost() {
           align-items: center;
           gap: 8px;
         }
-        .post-breadcrumb-sep { color: #c4001a; }
+        .post-breadcrumb-sep { color: #22d3ee; }
         .post-breadcrumb-current { color: rgba(255,255,255,0.65); }
 
         /* ── Main content area ── */
@@ -626,11 +633,11 @@ export default function BlogPost() {
           display: flex;
           flex-direction: column;
           scrollbar-width: thin;
-          scrollbar-color: rgba(196,0,26,0.4) transparent;
+          scrollbar-color: rgba(34,211,238,0.4) transparent;
           background: rgba(0, 0, 0, 0.35);
         }
         .post-body::-webkit-scrollbar { width: 4px; }
-        .post-body::-webkit-scrollbar-thumb { background: rgba(196,0,26,0.4); }
+        .post-body::-webkit-scrollbar-thumb { background: rgba(34,211,238,0.4); }
 
         /* ── Article container ── */
         .post-article {
@@ -642,8 +649,8 @@ export default function BlogPost() {
 
         /* ── Series banner ── */
         .post-series-banner {
-          background: rgba(196,0,26,0.1);
-          border: 1px solid rgba(196,0,26,0.3);
+          background: rgba(34,211,238,0.1);
+          border: 1px solid rgba(34,211,238,0.3);
           clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
           padding: 12px 20px;
           margin-bottom: 24px;
@@ -655,7 +662,7 @@ export default function BlogPost() {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 12px;
           letter-spacing: 2px;
-          color: #c4001a;
+          color: #22d3ee;
         }
         .post-series-name {
           font-family: 'Bebas Neue', sans-serif;
@@ -706,14 +713,14 @@ export default function BlogPost() {
         .post-divider {
           width: 100%;
           height: 1px;
-          background: linear-gradient(90deg, #c4001a 0%, transparent 100%);
+          background: linear-gradient(90deg, #22d3ee 0%, transparent 100%);
           margin: 20px 0 32px;
         }
 
         /* ── Series chapter list (inline at top of post) ── */
         .post-chapter-nav {
           background: rgba(0,0,0,0.5);
-          border: 1px solid rgba(196,0,26,0.2);
+          border: 1px solid rgba(34,211,238,0.2);
           clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
           padding: 16px 20px;
           margin-bottom: 32px;
@@ -722,7 +729,7 @@ export default function BlogPost() {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 14px;
           letter-spacing: 2px;
-          color: #c4001a;
+          color: #22d3ee;
           margin-bottom: 10px;
         }
         .post-chapter-nav-item {
@@ -737,14 +744,14 @@ export default function BlogPost() {
         .post-chapter-nav-item:last-child { border-bottom: none; }
         .post-chapter-nav-item:hover { transform: translateX(4px); }
         .post-chapter-nav-item:hover .pch-title { color: #fff; }
-        .post-chapter-nav-item.current .pch-num { background: #c4001a; }
+        .post-chapter-nav-item.current .pch-num { background: #22d3ee; }
         .post-chapter-nav-item.current .pch-title { color: #fff; }
         .pch-num {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 11px;
           letter-spacing: 1px;
           color: #fff;
-          background: rgba(196,0,26,0.5);
+          background: rgba(34,211,238,0.5);
           padding: 2px 8px;
           flex-shrink: 0;
           clip-path: polygon(0 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
@@ -777,7 +784,7 @@ export default function BlogPost() {
           letter-spacing: 1px;
           color: #eef4ff;
           margin: 32px 0 12px;
-          border-left: 3px solid #c4001a;
+          border-left: 3px solid #22d3ee;
           padding-left: 14px;
           line-height: 1.15;
         }
@@ -796,8 +803,8 @@ export default function BlogPost() {
         }
         .md-code-block {
           background: rgba(0,0,0,0.7);
-          border: 1px solid rgba(196,0,26,0.2);
-          border-left: 3px solid #c4001a;
+          border: 1px solid rgba(34,211,238,0.2);
+          border-left: 3px solid #22d3ee;
           padding: 20px 24px;
           margin: 20px 0;
           overflow-x: auto;
@@ -812,7 +819,7 @@ export default function BlogPost() {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 11px;
           letter-spacing: 2px;
-          color: #c4001a;
+          color: #22d3ee;
           opacity: 0.7;
           text-transform: uppercase;
         }
@@ -853,8 +860,8 @@ export default function BlogPost() {
         .md-inline-code {
           font-family: 'JetBrains Mono', monospace;
           font-size: 13px;
-          background: rgba(196,0,26,0.12);
-          border: 1px solid rgba(196,0,26,0.25);
+          background: rgba(34,211,238,0.12);
+          border: 1px solid rgba(34,211,238,0.25);
           color: #ff8080;
           padding: 1px 5px;
           border-radius: 2px;
@@ -883,7 +890,7 @@ export default function BlogPost() {
           content: "▸";
           position: absolute;
           left: 0;
-          color: #c4001a;
+          color: #22d3ee;
         }
         .md-table {
           width: 100%;
@@ -893,12 +900,12 @@ export default function BlogPost() {
           font-size: 15px;
         }
         .md-table th {
-          background: rgba(196,0,26,0.2);
+          background: rgba(34,211,238,0.2);
           color: #fff;
           padding: 8px 14px;
           text-align: left;
           letter-spacing: 1px;
-          border-bottom: 2px solid #c4001a;
+          border-bottom: 2px solid #22d3ee;
         }
         .md-table td {
           padding: 8px 14px;
@@ -909,14 +916,14 @@ export default function BlogPost() {
         .md-hr {
           border: none;
           height: 1px;
-          background: linear-gradient(90deg, #c4001a 0%, transparent 100%);
+          background: linear-gradient(90deg, #22d3ee 0%, transparent 100%);
           margin: 32px 0;
         }
         .md-blockquote {
-          border-left: 3px solid rgba(196,0,26,0.6);
+          border-left: 3px solid rgba(34,211,238,0.6);
           margin: 16px 0;
           padding: 10px 20px;
-          background: rgba(196,0,26,0.06);
+          background: rgba(34,211,238,0.06);
           font-family: 'Inter', sans-serif;
           font-style: italic;
           color: rgba(200,215,230,0.7);
@@ -931,7 +938,7 @@ export default function BlogPost() {
         .post-chapter-nav-btn {
           flex: 1;
           background: rgba(10,10,20,0.85);
-          border: 1px solid rgba(196,0,26,0.3);
+          border: 1px solid rgba(34,211,238,0.3);
           clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
           padding: 16px 20px;
           cursor: pointer;
@@ -941,15 +948,15 @@ export default function BlogPost() {
           display: block;
         }
         .post-chapter-nav-btn:hover {
-          background: rgba(196,0,26,0.15);
-          border-color: #c4001a;
+          background: rgba(34,211,238,0.15);
+          border-color: #22d3ee;
         }
         .post-chapter-nav-btn.next { text-align: right; }
         .post-chapter-nav-dir {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 11px;
           letter-spacing: 2px;
-          color: #c4001a;
+          color: #22d3ee;
           margin-bottom: 4px;
         }
         .post-chapter-nav-title {
@@ -972,7 +979,7 @@ export default function BlogPost() {
           gap: 16px;
           margin-bottom: 24px;
           padding-bottom: 12px;
-          border-bottom: 2px solid #c4001a;
+          border-bottom: 2px solid #22d3ee;
         }
         .comments-title {
           font-family: 'Anton', sans-serif;
@@ -1007,7 +1014,7 @@ export default function BlogPost() {
           margin-bottom: 32px;
           background: rgba(0,0,0,0.45);
           padding: 16px;
-          border: 1px solid rgba(196,0,26,0.15);
+          border: 1px solid rgba(34,211,238,0.15);
           clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
         }
         .comment-compose-avatar {
@@ -1039,16 +1046,16 @@ export default function BlogPost() {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 16px;
           letter-spacing: 3px;
-          color: #c4001a;
-          background: rgba(196,0,26,0.08);
-          border: 1px dashed rgba(196,0,26,0.4);
+          color: #22d3ee;
+          background: rgba(34,211,238,0.08);
+          border: 1px dashed rgba(34,211,238,0.4);
           padding: 20px;
           cursor: pointer;
           transition: all 0.18s ease;
           text-align: center;
         }
         .comment-identity-prompt:hover {
-          background: rgba(196,0,26,0.15);
+          background: rgba(34,211,238,0.15);
           border-style: solid;
         }
 
@@ -1112,7 +1119,7 @@ export default function BlogPost() {
           transition: color 0.15s ease;
           user-select: none;
         }
-        .comment-action-btn:hover { color: #c4001a; }
+        .comment-action-btn:hover { color: #22d3ee; }
         .comment-reaction-badge {
           font-size: 13px;
           background: rgba(255,255,255,0.06);
@@ -1123,13 +1130,13 @@ export default function BlogPost() {
           transition: background 0.15s ease;
           user-select: none;
         }
-        .comment-reaction-badge:hover { background: rgba(196,0,26,0.15); }
+        .comment-reaction-badge:hover { background: rgba(34,211,238,0.15); }
         .emoji-picker {
           position: absolute;
           top: 100%;
           left: 0;
           background: rgba(10,10,20,0.97);
-          border: 1px solid rgba(196,0,26,0.3);
+          border: 1px solid rgba(34,211,238,0.3);
           display: flex;
           gap: 4px;
           padding: 8px;
@@ -1142,13 +1149,13 @@ export default function BlogPost() {
           border-radius: 3px;
           transition: background 0.15s ease;
         }
-        .emoji-option:hover { background: rgba(196,0,26,0.2); }
+        .emoji-option:hover { background: rgba(34,211,238,0.2); }
 
         /* ── Textarea & buttons ── */
         .comment-textarea {
           width: 100%;
           background: rgba(0,0,0,0.5);
-          border: 1px solid rgba(196,0,26,0.3);
+          border: 1px solid rgba(34,211,238,0.3);
           color: rgba(220,232,242,0.9);
           font-family: 'Inter', sans-serif;
           font-size: 14px;
@@ -1159,14 +1166,14 @@ export default function BlogPost() {
           box-sizing: border-box;
           clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
         }
-        .comment-textarea:focus { border-color: #c4001a; }
+        .comment-textarea:focus { border-color: #22d3ee; }
         .comment-textarea::placeholder { color: rgba(255,255,255,0.2); }
 
         .comment-submit-btn {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 14px;
           letter-spacing: 2px;
-          background: #c4001a;
+          background: #22d3ee;
           color: #fff;
           border: none;
           padding: 8px 20px;
@@ -1174,8 +1181,8 @@ export default function BlogPost() {
           transition: background 0.15s ease;
           clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
         }
-        .comment-submit-btn:hover { background: #e0001f; }
-        .comment-submit-btn:disabled { background: rgba(196,0,26,0.3); cursor: not-allowed; }
+        .comment-submit-btn:hover { background: #06b6d4; }
+        .comment-submit-btn:disabled { background: rgba(34,211,238,0.3); cursor: not-allowed; }
 
         .comment-cancel-btn {
           font-family: 'Bebas Neue', sans-serif;
@@ -1201,7 +1208,7 @@ export default function BlogPost() {
           font-family: 'Bebas Neue', sans-serif;
           font-size: 12px;
           letter-spacing: 1.5px;
-          color: #c4001a;
+          color: #22d3ee;
         }
 
         /* ── Empty comments ── */
@@ -1238,7 +1245,7 @@ export default function BlogPost() {
         }
         .identity-modal {
           background: rgba(8,10,24,0.98);
-          border: 1px solid rgba(196,0,26,0.5);
+          border: 1px solid rgba(34,211,238,0.5);
           clip-path: polygon(0 0, 100% 0, calc(100% - 20px) 100%, 0 100%);
           padding: 40px;
           width: min(480px, 90vw);
@@ -1278,7 +1285,7 @@ export default function BlogPost() {
         .identity-input {
           width: 100%;
           background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(196,0,26,0.4);
+          border: 1px solid rgba(34,211,238,0.4);
           color: #fff;
           font-family: 'Inter', sans-serif;
           font-size: 16px;
@@ -1288,7 +1295,7 @@ export default function BlogPost() {
           clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
           box-sizing: border-box;
         }
-        .identity-input:focus { border-color: #c4001a; }
+        .identity-input:focus { border-color: #22d3ee; }
         .identity-input::placeholder { color: rgba(255,255,255,0.2); }
         .identity-hue-label {
           font-family: 'Bebas Neue', sans-serif;
@@ -1320,7 +1327,7 @@ export default function BlogPost() {
           font-family: 'Anton', sans-serif;
           font-size: 20px;
           letter-spacing: 3px;
-          background: #c4001a;
+          background: #22d3ee;
           color: #fff;
           border: none;
           padding: 14px;
@@ -1329,8 +1336,8 @@ export default function BlogPost() {
           clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
           margin-top: 8px;
         }
-        .identity-save-btn:hover { background: #e0001f; }
-        .identity-save-btn:disabled { background: rgba(196,0,26,0.3); cursor: not-allowed; }
+        .identity-save-btn:hover { background: #06b6d4; }
+        .identity-save-btn:disabled { background: rgba(34,211,238,0.3); cursor: not-allowed; }
 
         /* ── Hint ── */
         .post-hint {

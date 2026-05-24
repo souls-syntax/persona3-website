@@ -3,432 +3,377 @@ import { useNavigate } from "react-router-dom";
 import char1 from "./assets/char1.png";
 import char2 from "./assets/char2.png";
 import char3 from "./assets/char3.png";
-import bgVideo from "./assets/main1.mp4";
-import newsign from "./assets/newsign.png";
 import icon1 from "./assets/icon1.png";
 import icon2 from "./assets/icon2.png";
 import icon3 from "./assets/icon3.png";
-
-const CHARS = [char1, char2, char3];
-
-const ROLES = [
-  { text: "GIT",    color: "#e8c100", bg: "rgba(232,193,0,0.12)",  border: "rgba(232,193,0,0.5)"  },
-  { text: "X",      color: "#4a8fff", bg: "rgba(74,143,255,0.12)", border: "rgba(74,143,255,0.5)" },
-  { text: "EM",     color: "#c4001a", bg: "rgba(196,0,26,0.12)",   border: "rgba(196,0,26,0.5)"   },
-];
+import bgVideo from "./assets/silver-wolf-honkai-star-rail-4k-wallpaperwaifu-com.mp4";
 
 const ITEMS = [
-  {
-    id: "github",
-    label: "GITHUB",
-    handle: "@souls-syntax",
-    href: "https://github.com/souls-syntax",
-    icon: "🐙",
-    barIcon: icon1,
-    bars: 5,
-    newBars: [0],
-    counts: ["⭐4", "⭐3", "⭐4", "⭐1", "⭐1"],
-    links: [
+  { id: "github",  title: "GITHUB",   subtitle: "@souls-syntax",  icon: icon1, img: char1 },
+  { id: "twitter", title: "TWITTER",  subtitle: "@souls_syntax",  icon: icon2, img: char2 },
+  { id: "email",   title: "CONTACT",  subtitle: "Direct Message", icon: icon3, img: char3 },
+];
+
+const DETAIL_DATA = {
+  0: {
+    topTitle: "GitHub Profile",
+    subLevel: "Level 99",
+    description: "Increases code repository visibility by 100%. When the wearer commits code, there is a 50% base chance to spawn an open-source contributor. Increases 'Star' drops on all repositories by 15%.",
+    bullets: [
       "github.com/souls-syntax/tsundere-runtime",
       "github.com/souls-syntax/sauceOS",
       "github.com/souls-syntax/sush",
       "github.com/souls-syntax/C-STL",
-      "github.com/souls-syntax/nvim",
     ],
-    stats: [
-      { tag: "REPO", value: "57",  color: "#3ce2ff" },
-      { tag: "FOL",  value: "22",  color: "#9147ff" },
-    ],
-  },
-  {
-    id: "twitter",
-    label: "TWITTER / X",
-    handle: "@souls_syntax",
-    href: "https://twitter.com/souls_syntax",
-    icon: "🐦",
-    barIcon: icon2,
-    bars: 3,
-    newBars: [0],
-    counts: ["latest", "threads", "replies"],
     links: [
-      "twitter.com/souls_syntax",
-      "twitter.com/souls_syntax",
-      "twitter.com/souls_syntax",
-    ],
-    stats: [
-      { tag: "HDL",  value: "@SS",  color: "#1d9bf0" },
-      { tag: "PST",  value: "∞",    color: "#71c7f7" },
-    ],
+      "https://github.com/souls-syntax/tsundere-runtime",
+      "https://github.com/souls-syntax/sauceOS",
+      "https://github.com/souls-syntax/sush",
+      "https://github.com/souls-syntax/C-STL",
+    ]
   },
-  {
-    id: "email",
-    label: "CONTACT",
-    handle: "souls-syntax @ github",
-    href: "https://github.com/souls-syntax",
-    icon: "📬",
-    barIcon: icon3,
-    bars: 2,
-    newBars: [],
-    counts: ["profile", "repos"],
+  1: {
+    topTitle: "Twitter / X Profile",
+    subLevel: "Superimposition Lv. 1",
+    description: "The wearer's threads deal Aether DMG to the timeline. Increases tech-posting frequency by 20%. After the wearer uses a 'Reply', there is a 100% chance to engage in a low-level programming debate.",
+    bullets: [
+      "twitter.com/souls_syntax (Latest)",
+      "twitter.com/souls_syntax (Threads)",
+      "twitter.com/souls_syntax (Media)",
+    ],
     links: [
-      "github.com/souls-syntax",
-      "github.com/souls-syntax?tab=repositories",
-    ],
-    stats: [
-      { tag: "VIA",  value: "GH",   color: "#22c55e" },
-      { tag: "DM",   value: "OPEN", color: "#4ade80" },
-    ],
+      "https://twitter.com/souls_syntax",
+      "https://twitter.com/souls_syntax",
+      "https://twitter.com/souls_syntax",
+    ]
   },
-];
+  2: {
+    topTitle: "Direct Contact",
+    subLevel: "Superimposition Lv. 5",
+    description: "Bypasses all firewall resistances. Directly applies 'Incoming Message' debuff to the target. Best used for collaborative opportunities, bug reports, or sending cool system-level tricks.",
+    bullets: [
+      "Message via GitHub profile",
+      "Message via Twitter DMs",
+    ],
+    links: [
+      "https://github.com/souls-syntax",
+      "https://twitter.com/souls_syntax",
+    ]
+  },
+};
 
 export default function Socials() {
-  const [active, setActive]               = useState(0);
-  const [mounted, setMounted]             = useState(false);
-  const [activeInfoBar, setActiveInfoBar] = useState(0);
-  const [focus, setFocus]                 = useState("left"); // "left" | "right"
   const navigate = useNavigate();
+  const [active, setActive] = useState(0);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const t = setTimeout(() => setMounted(true), 60);
+    const t = setTimeout(() => setMounted(true), 100);
     return () => clearTimeout(t);
   }, []);
 
   useEffect(() => {
     const onKey = (e) => {
-      if (focus === "left") {
-        if (e.key === "ArrowUp")    setActive(i => Math.max(0, i - 1));
-        if (e.key === "ArrowDown")  setActive(i => Math.min(ITEMS.length - 1, i + 1));
-        if (e.key === "ArrowRight") { setFocus("right"); setActiveInfoBar(0); }
-        if (e.key === "Enter")      window.open(ITEMS[active].href, "_blank");
-      } else {
-        const barCount = ITEMS[active].bars;
-        if (e.key === "ArrowUp")   setActiveInfoBar(i => Math.max(0, i - 1));
-        if (e.key === "ArrowDown") setActiveInfoBar(i => Math.min(barCount - 1, i + 1));
-        if (e.key === "ArrowLeft") setFocus("left");
-        if (e.key === "Enter")     window.open("https://" + ITEMS[active].links[activeInfoBar], "_blank");
-      }
-      if ((e.key === "ArrowLeft" && focus === "left") || e.key === "Escape" || e.key === "Backspace") navigate(-1);
+      if (e.key === "ArrowLeft")  setActive((i) => Math.max(0, i - 1));
+      if (e.key === "ArrowRight") setActive((i) => Math.min(ITEMS.length - 1, i + 1));
+      if (e.key === "Escape" || e.key === "Backspace") navigate(-1);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [active, navigate, focus]);
+  }, [navigate]);
+
+  const detail = DETAIL_DATA[active];
+  const currentItem = ITEMS[active];
 
   return (
-    <div id="menu-screen">
-      <video src={bgVideo} autoPlay loop muted playsInline />
+    <div id="hsr-resume-screen">
+      <video className="hsr-bg-video" src={bgVideo} autoPlay loop muted playsInline />
+      <div className="hsr-dim-overlay" />
+
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,700;1,700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans:wght@400;700&display=swap');
 
-        .sc-root {
-          position: absolute; inset: 0; z-index: 10;
-          pointer-events: none; display: flex; flex-direction: column;
-          align-items: flex-start; justify-content: center; gap: 6px; padding-left: 0;
-        }
-
-        /* ── Each bar ── */
-        .sc-bar {
-          position: relative; width: 45vw; height: 64px;
-          transition: height 0.3s cubic-bezier(0.22,1,0.36,1);
-          background: #111; cursor: pointer; pointer-events: all;
-          clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
-          box-shadow: 0 6px 24px rgba(0,0,0,0.65); z-index: 1;
-        }
-        .sc-bar-outer {
-          position: relative; flex-shrink: 0;
-          transform: translateX(-100%);
-          transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .sc-bar-outer.active .sc-bar     { height: 90px; }
-        .sc-bar-outer.active .sc-bar-red { height: 90px; }
-        .sc-bar-outer.mounted { transform: translateX(0); }
-        .sc-bar-outer:nth-child(1) { transition-delay: 0ms; }
-        .sc-bar-outer:nth-child(2) { transition-delay: 80ms; }
-        .sc-bar-outer:nth-child(3) { transition-delay: 160ms; }
-
-        .sc-bar-red {
-          position: absolute; top: 0; left: 0; width: 45vw; height: 64px;
-          background: #c4001a;
-          clip-path: polygon(50% 0, 100% 0, 100% 100%, calc(50% - 10px) 100%);
-          transform: translateY(-7px); opacity: 0;
-          transition: opacity 0.2s ease; z-index: 0; pointer-events: none;
-        }
-        .sc-bar-outer.active .sc-bar-red { opacity: 1; }
-
-        .sc-bar-fill {
-          position: absolute; inset: 0; width: 100%; background: #ffffff;
-          clip-path: polygon(100% 0, 100% 0, calc(100% - 32px) 100%, calc(100% - 32px) 100%);
-          transition: clip-path 0.35s cubic-bezier(0.22, 1, 0.36, 1); z-index: 0;
-        }
-        .sc-bar-outer.active .sc-bar-fill {
-          clip-path: polygon(22% 0, 100% 0, calc(100% - 14px) 100%, calc(22% + 138px) 100%);
+        #hsr-resume-screen {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          background: #06030f;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Noto Sans', 'Inter', sans-serif;
         }
 
-        .sc-bar-shade {
-          position: absolute; top: 0; bottom: 0; left: 73%; width: 6%;
-          background: linear-gradient(90deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0) 100%);
-          z-index: 1; pointer-events: none; opacity: 0; transition: opacity 0.35s ease;
+        .hsr-bg-video {
+          position: absolute;
+          inset: 0;
+          width: 100%; height: 100%;
+          object-fit: cover;
+          filter: blur(10px) brightness(0.4) saturate(1.2);
+          z-index: 0;
         }
-        .sc-bar-outer.active .sc-bar-shade { opacity: 1; }
-
-        .sc-bar::after {
-          content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 6px;
-          background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%);
-          z-index: 10; pointer-events: none;
-        }
-
-        .sc-bar-content {
-          position: relative; z-index: 2; height: 100%;
-          display: flex; align-items: center; justify-content: space-between;
-          padding: 0 20px 0 20px;
+        
+        .hsr-dim-overlay {
+          position: absolute; inset: 0;
+          background: radial-gradient(circle at 50% 50%, transparent 20%, rgba(6,3,15,0.8) 100%);
+          z-index: 1;
         }
 
-        .sc-role {
-          display: flex; align-items: center; flex-shrink: 0;
-          font-family: 'Anton', sans-serif; font-size: 50px; letter-spacing: -2px;
-          color: #ffffff; transform: rotate(-30deg); user-select: none;
-          line-height: 1; padding: 0 16px 0 8px;
+        .hsr-content-wrap {
+          position: relative;
+          z-index: 10;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6vw;
+          width: 90vw;
+          max-width: 1400px;
+          opacity: 0;
+          transform: translateY(20px);
+          transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .hsr-content-wrap.mounted {
+          opacity: 1;
+          transform: translateY(0);
         }
 
-        .sc-main {
-          flex: 1; display: flex; flex-direction: column;
-          align-items: center; justify-content: center; gap: 3px;
-        }
-        .sc-main-top { display: flex; align-items: center; gap: 12px; }
-
-        .sc-icon {
-          font-family: 'Bebas Neue', sans-serif; font-size: 22px; width: 32px;
-          text-align: center; flex-shrink: 0; color: rgba(255,255,255,0.15);
-          transition: color 0.2s ease; user-select: none;
-        }
-        .sc-bar-outer.active .sc-icon { color: rgba(255,255,255,0.25); }
-
-        .sc-label {
-          font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 4px;
-          line-height: 1; color: rgba(255,255,255,0.85);
-          transition: color 0.2s ease; user-select: none;
-        }
-        .sc-bar-outer.active .sc-label { color: #111111; }
-
-        @keyframes sc-arrow-left {
-          0%, 100% { transform: translateX(0); opacity: 1; }
-          50%       { transform: translateX(-5px); opacity: 0.4; }
-        }
-        @keyframes sc-arrow-right {
-          0%, 100% { transform: translateX(0); opacity: 1; }
-          50%       { transform: translateX(5px); opacity: 0.4; }
-        }
-        .sc-nav-btn {
-          font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 2px;
-          color: #111; border: 1px solid rgba(0,0,0,0.35);
-          padding: 1px 7px; line-height: 1.5; user-select: none;
-        }
-        .sc-nav-arrow {
-          font-size: 12px; color: #c4001a; display: inline-block;
-        }
-        .sc-nav-arrow.left  { animation: sc-arrow-left  0.8s ease-in-out infinite; }
-        .sc-nav-arrow.right { animation: sc-arrow-right 0.8s ease-in-out infinite; }
-
-        .sc-stats {
-          display: flex; align-items: center; gap: 10px; padding-right: 24px; flex-shrink: 0;
-        }
-        .sc-stat { display: flex; flex-direction: column; align-items: flex-start; }
-        .sc-stat-top { display: flex; align-items: baseline; gap: 4px; }
-        .sc-stat-tag {
-          font-family: 'Bebas Neue', sans-serif; font-size: 9px; letter-spacing: 1.5px;
-          padding: 1px 4px; border-width: 1px; border-style: solid; line-height: 1.4; user-select: none;
-        }
-        .sc-stat-num {
-          font-family: 'Bebas Neue', sans-serif; font-size: 26px; font-style: italic;
-          line-height: 1; color: #ffffff; letter-spacing: 1px; user-select: none;
-          transition: color 0.2s ease;
-        }
-        .sc-bar-outer.active .sc-stat-num { color: #111111; }
-        .sc-stat-bars { width: 100%; display: flex; flex-direction: column; gap: 1px; margin-top: 2px; }
-        .sc-stat-bar-color { height: 3px; width: 100%; }
-        .sc-stat-bar-black { height: 2px; width: 100%; background: #000; }
-
-        .sc-char {
-          position: absolute; top: 0; left: 110px; height: 100%; width: auto;
-          max-width: 160px; object-fit: cover; object-position: top;
-          pointer-events: none; z-index: 3;
-          clip-path: polygon(20px 0%, 100% 0%, calc(100% - 20px) 100%, 0% 100%);
+        /* --- LEFT SIDE: CARD & ICONS --- */
+        .hsr-left-panel {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 20px;
         }
 
-        @keyframes sc-right-nav-pop {
-          0%   { opacity: 0; transform: scale(0.55) translateY(-10px); }
-          65%  { opacity: 1; transform: scale(1.1) translateY(2px); }
-          100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        .sc-right-nav {
-          position: fixed; top: 40px; right: 40px;
-          display: flex; align-items: center; gap: 6px;
-          pointer-events: none; z-index: 50;
-          animation: sc-right-nav-pop 0.38s cubic-bezier(0.22,1,0.36,1) both;
-        }
-        .sc-right-nav .sc-nav-btn {
-          font-family: 'Bebas Neue', sans-serif; font-size: 100px; letter-spacing: 3px;
-          line-height: 1; user-select: none; color: #fff; -webkit-text-stroke: 2px #000;
-          paint-order: stroke fill; background: none; border: none; padding: 0 6px;
-        }
-        .sc-right-nav .sc-nav-label {
-          font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 3px;
-          line-height: 1; user-select: none; color: #111; padding: 0 8px;
-        }
-        .sc-right-nav .sc-nav-arrow {
-          font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: #c4001a;
-          display: inline-block; user-select: none;
-        }
-        .sc-right-nav .sc-nav-arrow.left  { animation: sc-arrow-left  0.8s ease-in-out infinite; }
-        .sc-right-nav .sc-nav-arrow.right { animation: sc-arrow-right 0.8s ease-in-out infinite; }
-
-        @keyframes sc-infobar-in {
-          0%   { opacity: 0; transform: translateX(40px); }
-          60%  { opacity: 1; transform: translateX(-4px); }
-          100% { opacity: 1; transform: translateX(0); }
-        }
-        .sc-info-bar-wrap {
-          position: fixed; right: 0; left: 65%; height: 46px;
-          background: transparent; pointer-events: all; cursor: pointer;
-          z-index: 50; padding: 0;
-          animation: sc-infobar-in 0.35s cubic-bezier(0.22,1,0.36,1) both;
-        }
-        .sc-info-bar-wrap.selected {
-          background: #111; padding: 1.5px; border-radius: 8px;
-        }
-        .sc-info-bar {
-          position: relative; width: 100%; height: 100%;
-          background: transparent; display: flex; align-items: center; overflow: hidden;
-        }
-        .sc-info-bar-wrap.selected .sc-info-bar {
-          background: #fff; border-radius: 7px;
-        }
-        .sc-info-bar-new {
-          position: absolute; left: -40px; bottom: 0; height: 65%; width: auto;
-          pointer-events: none; z-index: 3;
-        }
-        .sc-info-bar-wrap.selected .sc-info-bar::before {
-          content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
-          background: #c4001a; z-index: 1;
-        }
-        .sc-info-bar-text {
-          flex: 1; font-family: 'Bebas Neue', sans-serif; font-size: 16px;
-          letter-spacing: 1.5px; color: #111; padding: 0 14px; user-select: none;
-        }
-        .sc-info-bar-box {
-          height: 70%; background: #000; display: flex; align-items: center;
-          padding: 0 12px; font-family: 'Bebas Neue', sans-serif; font-size: 16px;
-          letter-spacing: 1px; color: #fff; flex-shrink: 0;
-          border-radius: 6px; margin-right: 4px; user-select: none;
-        }
-        .sc-info-bar-icon {
-          height: 55%; width: auto; flex-shrink: 0; margin-left: 14px;
-          object-fit: contain; pointer-events: none; user-select: none;
-        }
-        .sc-info-bar-count {
-          font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1px;
-          color: #111; margin-right: 80px; flex-shrink: 0; user-select: none;
+        .hsr-card-title {
+          font-family: 'Inter', sans-serif;
+          font-weight: 800;
+          font-size: 42px;
+          color: #ffffff;
+          text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+          align-self: flex-start;
+          margin-bottom: -10px;
         }
 
-        .sc-footer {
-          position: fixed; bottom: 20px; right: 28px;
-          display: flex; flex-direction: column; align-items: flex-end; gap: 5px;
-          font-family: 'Bebas Neue', sans-serif; z-index: 50;
-          opacity: 0; transition: opacity 0.4s ease 0.6s;
+        .hsr-card-subtitle {
+          font-family: 'Noto Sans', sans-serif;
+          font-size: 16px;
+          color: #d1d5db;
+          align-self: flex-start;
+          margin-bottom: 10px;
         }
-        .sc-footer.mounted { opacity: 1; }
-        .sc-footer-row {
-          display: flex; align-items: center; gap: 8px;
-          font-size: 13px; letter-spacing: 2px; color: rgba(255,255,255,0.22);
+
+        .hsr-main-card {
+          position: relative;
+          width: 320px;
+          height: 480px;
+          border-radius: 8px;
+          border: 2px solid rgba(255,255,255,0.2);
+          box-shadow: 0 0 30px rgba(124, 58, 237, 0.4), inset 0 0 20px rgba(255,255,255,0.1);
+          overflow: hidden;
+          transition: transform 0.3s ease;
+          background: linear-gradient(135deg, #2a1b4d 0%, #100a20 100%);
         }
-        .sc-footer-key {
-          border: 1px solid rgba(255,255,255,0.15); border-radius: 3px;
-          padding: 1px 6px; font-size: 11px;
+        
+        .hsr-main-card::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border: 1px solid rgba(34, 211, 238, 0.5);
+          border-radius: 6px;
+          margin: 4px;
+          pointer-events: none;
+        }
+
+        .hsr-card-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          opacity: 0.9;
+          filter: contrast(1.1) brightness(1.1);
+          animation: floatCard 6s ease-in-out infinite;
+        }
+
+        @keyframes floatCard {
+          0%, 100% { transform: translateY(0) scale(1); }
+          50% { transform: translateY(-8px) scale(1.02); }
+        }
+
+        .hsr-icon-row {
+          display: flex;
+          gap: 12px;
+          margin-top: 10px;
+        }
+
+        .hsr-icon-box {
+          width: 54px;
+          height: 54px;
+          background: rgba(20, 15, 40, 0.8);
+          border: 1px solid rgba(255,255,255,0.2);
+          cursor: pointer;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+        }
+
+        .hsr-icon-box:hover {
+          border-color: #22d3ee;
+          background: rgba(34, 211, 238, 0.2);
+          transform: translateY(-2px);
+        }
+
+        .hsr-icon-box.active {
+          border-color: #facc15;
+          box-shadow: 0 0 10px rgba(250, 204, 21, 0.5);
+          transform: scale(1.05);
+        }
+
+        .hsr-icon-box img {
+          width: 80%;
+          height: 80%;
+          object-fit: contain;
+          filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+
+        /* --- RIGHT SIDE: DESCRIPTION PANEL --- */
+        .hsr-right-panel {
+          width: 480px;
+          background: rgba(15, 10, 25, 0.85);
+          backdrop-filter: blur(12px);
+          border-left: 3px solid #facc15;
+          padding: 30px;
+          color: #e5e7eb;
+          box-shadow: 10px 10px 30px rgba(0,0,0,0.5);
+          min-height: 480px;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .hsr-panel-title {
+          font-family: 'Inter', sans-serif;
+          font-weight: 800;
+          font-size: 24px;
+          color: #facc15;
+          margin-bottom: 4px;
+          text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .hsr-panel-sub {
+          font-family: 'Noto Sans', sans-serif;
+          font-size: 14px;
+          color: #fef08a;
+          margin-bottom: 20px;
+        }
+
+        .hsr-panel-desc {
+          font-size: 15px;
+          line-height: 1.6;
+          color: #d1d5db;
+          margin-bottom: 24px;
+        }
+
+        .hsr-panel-bullets {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          margin-top: auto;
+        }
+
+        .hsr-bullet-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+          font-size: 14px;
+          line-height: 1.5;
+          background: rgba(255,255,255,0.03);
+          padding: 10px 14px;
+          border-left: 2px solid #22d3ee;
+          cursor: pointer;
+          transition: background 0.2s, padding-left 0.2s;
+        }
+        
+        .hsr-bullet-item:hover {
+          background: rgba(34, 211, 238, 0.1);
+          padding-left: 20px;
+        }
+
+        .hsr-nav-hint {
+          position: absolute;
+          top: 30px;
+          left: 40px;
+          z-index: 100;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          color: #fff;
+          font-family: 'Inter', sans-serif;
+          font-size: 14px;
+          opacity: 0.6;
+          cursor: pointer;
+        }
+        .hsr-nav-hint:hover { opacity: 1; }
+        .hsr-back-btn {
+          width: 36px; height: 36px;
+          border-radius: 50%;
+          border: 1px solid rgba(255,255,255,0.4);
+          display: flex; align-items: center; justify-content: center;
+          background: rgba(0,0,0,0.5);
         }
       `}</style>
 
-      <div className="sc-root" role="navigation">
-        {ITEMS.map((item, i) => (
-          <div
-            key={item.id}
-            className={`sc-bar-outer${active === i ? " active" : ""}${mounted ? " mounted" : ""}`}
-            onClick={() => {
-              if (active === i) window.open(item.href, "_blank");
-              else setActive(i);
-            }}
-            onMouseEnter={() => setActive(i)}
-          >
-            <div className="sc-bar-red" />
-            <div className="sc-bar">
-              <img className="sc-char" src={CHARS[i]} alt="" />
-              <div className="sc-bar-fill" />
-              <div className="sc-bar-shade" />
-              <div className="sc-bar-content">
-                <div className="sc-role">{ROLES[i].text}</div>
-                <div className="sc-main">
-                  <div className="sc-main-top">
-                    <div className="sc-icon">{item.icon}</div>
-                    <div className="sc-label">{item.label}</div>
-                  </div>
-                </div>
-                <div className="sc-stats">
-                  {item.stats.map(s => (
-                    <div className="sc-stat" key={s.tag}>
-                      <div className="sc-stat-top">
-                        <span className="sc-stat-tag" style={{ color: s.color, borderColor: s.color }}>{s.tag}</span>
-                        <span className="sc-stat-num">{s.value}</span>
-                      </div>
-                      <div className="sc-stat-bars">
-                        <div className="sc-stat-bar-color" style={{ background: s.color }} />
-                        <div className="sc-stat-bar-black" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+      <div className="hsr-nav-hint" onClick={() => navigate(-1)}>
+        <div className="hsr-back-btn">←</div>
+        <span>BACK</span>
       </div>
 
-      {mounted && (
-        <div className="sc-right-nav" key={active}>
-          <span className="sc-nav-arrow left">◄</span>
-          <span className="sc-nav-btn">LB</span>
-          <span className="sc-nav-label">{ITEMS[active].label}</span>
-          <span className="sc-nav-btn">RB</span>
-          <span className="sc-nav-arrow right">►</span>
-        </div>
-      )}
+      <div className={`hsr-content-wrap ${mounted ? "mounted" : ""}`}>
+        
+        {/* LEFT PANEL */}
+        <div className="hsr-left-panel">
+          <div className="hsr-card-title">{currentItem.title}</div>
+          <div className="hsr-card-subtitle">Path: Nihility // {currentItem.subtitle}</div>
+          
+          <div className="hsr-main-card">
+            <img src={currentItem.img} alt={currentItem.title} className="hsr-card-image" />
+          </div>
 
-      {mounted && Array.from({ length: ITEMS[active].bars }).map((_, i) => (
-        <div
-          className={`sc-info-bar-wrap${activeInfoBar === i ? " selected" : ""}`}
-          key={`bar-${active}-${i}`}
-          style={{ top: `${155 + i * 52}px`, animationDelay: `${i * 50}ms` }}
-          onClick={() => {
-            if (activeInfoBar === i) window.open("https://" + ITEMS[active].links[i], "_blank");
-            else setActiveInfoBar(i);
-          }}
-          onMouseEnter={() => setActiveInfoBar(i)}
-        >
-          {ITEMS[active].newBars.includes(i) && (
-            <img className="sc-info-bar-new" src={newsign} alt="" />
-          )}
-          <div className="sc-info-bar">
-            <img className="sc-info-bar-icon" src={ITEMS[active].barIcon} alt="" />
-            <span className="sc-info-bar-text">
-              {ITEMS[active].links[i]}
-            </span>
-            <span className="sc-info-bar-box">OPEN</span>
-            <span className="sc-info-bar-count">{ITEMS[active].counts[i]}</span>
+          <div className="hsr-icon-row">
+            {ITEMS.map((item, idx) => (
+              <div 
+                key={item.id} 
+                className={`hsr-icon-box ${active === idx ? 'active' : ''}`}
+                onClick={() => setActive(idx)}
+              >
+                <img src={item.icon} alt={item.title} />
+              </div>
+            ))}
           </div>
         </div>
-      ))}
 
-      <div className={`sc-footer${mounted ? " mounted" : ""}`}>
-        <div className="sc-footer-row"><span className="sc-footer-key">↑↓</span><span>SELECT</span></div>
-        <div className="sc-footer-row"><span className="sc-footer-key">↵</span><span>OPEN</span></div>
-        <div className="sc-footer-row"><span className="sc-footer-key">ESC</span><span>BACK</span></div>
+        {/* RIGHT PANEL */}
+        <div className="hsr-right-panel">
+          <div className="hsr-panel-title">| {detail.topTitle}</div>
+          <div className="hsr-panel-sub">{detail.subLevel}</div>
+          
+          <div className="hsr-panel-desc">
+            {detail.description}
+          </div>
+
+          <div className="hsr-panel-bullets">
+            {detail.bullets.map((b, i) => (
+              <div 
+                className="hsr-bullet-item" 
+                key={i}
+                onClick={() => window.open(detail.links[i], "_blank")}
+              >
+                <span>{b}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
     </div>
   );
